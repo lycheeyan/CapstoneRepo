@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Carbon Installation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+
+        #right-panel {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            bottom: 24px;
+            display: flex;
+            gap: 18px;
+            pointer-events: none;
+            font-family: monospace;
+            font-size: 15px;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .history-window {
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+        .history-track {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .history-row {
+            line-height: 1.85;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="left-panel" style="position:absolute; top:24px; left:24px; color:white; font-family:monospace; pointer-events:none; max-width:260px;">
+      <div style="font-size:11px; letter-spacing:0.15em; opacity:0.7;">YEAR</div>
+      <div id="display-year" style="font-size:72px; font-weight:bold; line-height:1.0; margin-bottom:24px;">2026</div>
+
+      <div style="font-size:12px; line-height:1.7; opacity:0.85;">
+        <p>The Malaysian Government has identified <strong>205,209HA</strong> of abandoned rubber plantations.</p>
+        <p>This is a production potential of over <strong>550,000 tonnes</strong> of rubber.</p>
+        <p>They have plans to target <strong>10,000HA</strong> each year.</p>
+        <p>On average, <strong>one mature rubber tree</strong> can sequester <strong>25–30kg/co2e</strong> per year.</p>
+        <p>The shelf life of a rubber monoculture is <strong>27 years</strong></p>
+        <p>Imagine what these forests could become, if we tended to them with <strong>planetary care.</strong></p>
+        <p>now</p>
+        <p><strong>for a year</strong></p>
+        <p><strong>for a decade</strong></p>
+        <p><strong>for a century</strong></p>
+        <p>////</p>
+      </div>
+    </div>
+
+    <div id="right-panel" style="
+        position:absolute;
+        top:24px;
+        right:24px;
+        bottom:24px;
+        display:flex;
+        gap:32px;
+        pointer-events:none;
+        font-family:monospace;
+        font-size:11px;
+        line-height:1.4;
+        letter-spacing:0.04em;
+        white-space:nowrap;
+        ">
+        <div style="display:flex; flex-direction:column; height:100%;">
+            <div style="font-size:10px; letter-spacing:0.15em; opacity:0.45; margin-bottom:8px; text-align:right; color:white;">AGROFOREST<br><span style="font-size:9px; opacity:0.6;">tCO₂e/ha/yr</span></div>
+            <div class="history-window" style="flex:1; overflow:hidden; display:flex; align-items:flex-end;">
+                <div id="agro-history" class="history-track"></div>
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; height:100%;">
+            <div style="font-size:10px; letter-spacing:0.15em; opacity:0.45; margin-bottom:8px; text-align:right; color:white;">MONOCULTURE<br><span style="font-size:9px; opacity:0.6;">tCO₂e/ha/yr</span></div>
+            <div class="history-window" style="flex:1; overflow:hidden; display:flex; align-items:flex-end;">
+                <div id="mono-history" class="history-track"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom-centre totals -->
+    <div id="bottom-totals" style="
+        position:absolute;
+        bottom:32px;
+        left:50%;
+        transform:translateX(-50%);
+        display:flex;
+        gap:48px;
+        pointer-events:none;
+        font-family:monospace;
+        white-space:nowrap;
+        text-align:center;
+    ">
+        <div>
+            <div style="font-size:10px; letter-spacing:0.15em; opacity:0.55; margin-bottom:4px;">AGROFOREST TOTAL</div>
+            <div id="agro-total" style="font-size:22px; color:rgba(235,245,255,0.85);">—</div>
+            <div style="font-size:10px; letter-spacing:0.1em; opacity:0.45; margin-top:3px;">tCO₂e across 205,209 ha</div>
+        </div>
+        <div>
+            <div style="font-size:10px; letter-spacing:0.15em; opacity:0.55; margin-bottom:4px;">MONOCULTURE TOTAL</div>
+            <div id="mono-total" style="font-size:22px; color:rgba(235,245,255,0.85);">—</div>
+            <div style="font-size:10px; letter-spacing:0.1em; opacity:0.45; margin-top:3px;">tCO₂e across 205,209 ha</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/misc/GPUComputationRenderer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+
+    <script src="sketch_carbon_v2.js"></script>
+</body>
+</html>

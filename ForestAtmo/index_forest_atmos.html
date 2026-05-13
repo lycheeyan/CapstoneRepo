@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forest Atmos — Rubber Plantation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden;}
+    canvas { display: block; }
+    #vid { display: none; }
+
+    #data-footer {
+      position: absolute;
+      bottom: 1px; left: 1px; right: 1px;
+      height: 50px;
+      border: 0.5px solid rgba(136, 255, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 40px;
+      color: #ffffff;
+      font-family: 'Overpass Mono', monospace;
+      z-index: 101;
+      pointer-events: none;
+    }
+
+    .footer-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-label { font-size: 8px; opacity: 0.5; text-transform: uppercase; }
+    .footer-value  { font-size: 13px; font-weight: light; color: #fff; }
+
+    #box-year {
+      position: absolute;
+      font-family: 'Overpass Mono', monospace;
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 101;
+      padding: 6px 8px;
+      line-height: 1.6;
+    }
+    #fp-label {
+      position: absolute;
+      font-family: 'Overpass Mono', monospace;
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 101;
+      padding: 6px 8px;
+      line-height: 1.6;
+      text-align: left;
+      transform: none;
+    }
+    .rubber-sub-label {
+      position: absolute;
+      font-family: 'Overpass Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      z-index: 101;
+      padding: 0 8px;
+      line-height: 1.6;
+    }
+    .state-box {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      background: transparent;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .state-lbl {
+      position: absolute;
+      font-family: 'Overpass Mono', monospace;
+      font-size: 9px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.70);
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      z-index: 100;
+      padding: 2px 4px;
+    }
+    .fp-corner {
+      position: absolute;
+      font-family: 'Overpass Mono', monospace;
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.40);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 101;
+      transform: translate(-50%, -50%);
+    }
+    #fp-box {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      background: transparent;
+      pointer-events: none;
+      z-index: 101;
+    }
+  </style>
+</head>
+<body>
+  <!--
+    VIDEO COMPATIBILITY NOTE:
+    Chrome/Firefox/Edge cannot play .MOV files. Convert first:
+      ffmpeg -i data/MOV_4509.MOV -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -movflags +faststart data/MOV_4509.mp4
+    crossorigin is intentionally omitted — it breaks WebGL texture access on file:// URLs.
+    If serving from a web server with CORS headers, add crossorigin="anonymous" back.
+  -->
+  <audio id="plantation-audio" loop preload="auto">
+    <source src="data/Plantation Audio.mp3" type="audio/mpeg">
+  </audio>
+
+  <video id="vid" muted loop playsinline preload="auto">
+    <source src="data/MOV_4510_bluegreen_fast.mp4" type="video/mp4">
+  </video>
+
+  <div id="box-year"></div>
+  <div id="rubber-estate-label" class="rubber-sub-label"></div>
+  <div id="rubber-smallholding-label" class="rubber-sub-label"></div>
+  <div id="fp-label"></div>
+  <div id="fp-box"></div>
+
+  <!-- Per-state forest plantation outline boxes -->
+  <div class="state-box" id="state-box-kelantan"></div>
+  <div class="state-box" id="state-box-pahang"></div>
+  <div class="state-box" id="state-box-johor"></div>
+  <div class="state-box" id="state-box-kedah"></div>
+  <div class="state-box" id="state-box-perak"></div>
+  <div class="state-box" id="state-box-negeri-sembilan"></div>
+  <div class="state-box" id="state-box-selangor"></div>
+  <!-- State labels -->
+  <div class="state-lbl" id="state-lbl-kelantan"></div>
+  <div class="state-lbl" id="state-lbl-pahang"></div>
+  <div class="state-lbl" id="state-lbl-johor"></div>
+  <div class="state-lbl" id="state-lbl-kedah"></div>
+  <div class="state-lbl" id="state-lbl-perak"></div>
+  <div class="state-lbl" id="state-lbl-negeri-sembilan"></div>
+  <div class="state-lbl" id="state-lbl-selangor"></div>
+
+  <div id="data-footer">
+    <div class="footer-item">
+      <div class="footer-label">Location</div>
+      <div class="footer-value">West Malaysia</div>
+    </div>
+    <div class="footer-item">
+      <div class="footer-label">Year</div>
+      <div class="footer-value" id="footer-year">2007</div>
+    </div>
+    <div class="footer-item">
+      <div class="footer-label">Cultivation Cycle</div>
+      <div class="footer-value" id="footer-tick">Year 1</div>
+    </div>
+    <div class="footer-item">
+      <div class="footer-label">Forest Plantation</div>
+      <div class="footer-value" id="footer-forest">—</div>
+    </div>
+    <div class="footer-item">
+      <div class="footer-label">Rubber Plantation</div>
+      <div class="footer-value" id="footer-rubber">—</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="sketch_forest_atmos_v15.js"></script>
+</body>
+
+</html>
