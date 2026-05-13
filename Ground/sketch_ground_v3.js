@@ -21,7 +21,6 @@
 // ─── Configuration ───────────────────────────────────────────────────────────
 
 const IMAGES = [
-  'data/DSC_4134_2.jpg',
   'data/DSC_4134.JPG',
   'data/Forest_Floor_Aug.jpg',
   'data/Forest_Floor_Aug_2.jpg',
